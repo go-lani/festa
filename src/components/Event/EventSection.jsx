@@ -12,7 +12,7 @@ const TitleArea = styled.div`
   border-bottom: 2px solid #fff;
 `;
 
-const CategoryTitle = styled.p`
+const CategoryTitle = styled.h2`
   font-size: 2.5rem;
 `;
 

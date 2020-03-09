@@ -36,8 +36,6 @@ const VisualTitle = styled.strong`
   `}
 `;
 
-const ContentsArea = styled.section``;
-
 const Home = props => {
   return (
     <>
