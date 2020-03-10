@@ -1,8 +1,9 @@
 import React from 'react';
-import Header from '../components/Header';
 import styled from 'styled-components';
-import media from '../libs/MediaQuery';
+import Header from '../components/Header';
+import A11yTitle from '../components/Common/A11yTitle';
 import EventSection from '../components/Event/EventSection';
+import media from '../libs/MediaQuery';
 
 const VisualArea = styled.section`
   display: flex;
@@ -41,15 +42,16 @@ const Home = props => {
     <>
       <Header />
       <VisualArea>
+        <A11yTitle>비주얼 영역</A11yTitle>
         <VisualTitle>
           이벤트를 만나는
           <br />
           가장 쉬운 방법!
         </VisualTitle>
       </VisualArea>
-      <EventSection category="무료" />
-      <EventSection category="유료" />
-      <EventSection category="외부" />
+      <EventSection category="free" />
+      <EventSection category="pay" />
+      <EventSection category="otherEvent" />
     </>
   );
 };
