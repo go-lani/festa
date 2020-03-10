@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import media from '../../libs/MediaQuery';
 
@@ -47,7 +47,32 @@ const ImgBox = styled.div`
   img {
     width: 100%;
   }
+
+  ${({ end }) =>
+    end &&
+    css`
+      &:before {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        content: '종료된 이벤트입니다.';
+        background: rgba(0, 0, 0, 0.7);
+        font-weight: 700;
+        font-size: 1.6rem;
+        color: #fff;
+
+        ${media.mobile`
+            font-size: 2.4rem;
+        `}
+      }
+    `}
 `;
+
 const InfoBox = styled.div`
   padding: 20px;
   font-weight: 700;
@@ -148,7 +173,7 @@ const EventListItem = ({
   return (
     <Item>
       <Link to={`/view?category=${category}&detail=${id}`}>
-        <ImgBox>
+        <ImgBox end={apply === '이벤트 종료'}>
           <img src={image} alt={title} />
         </ImgBox>
         <InfoBox>
