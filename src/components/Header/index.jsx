@@ -137,11 +137,9 @@ const Header = props => {
         </Link>
       </Logo>
       <Menu>
-        {isSignIn && (
-          <KeywordAlarm onClick={setAlram}>
-            <img src="/images/alram.png" alt="알람설정" />
-          </KeywordAlarm>
-        )}
+        <KeywordAlarm onClick={setAlram}>
+          <img src="/images/alram.png" alt="알람설정" />
+        </KeywordAlarm>
         <LoginMenu>
           {isSignIn ? (
             <>

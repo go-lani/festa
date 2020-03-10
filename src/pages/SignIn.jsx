@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styled, { css } from 'styled-components';
+import { Link } from 'react-router-dom';
 import A11yTitle from '../components/Common/A11yTitle';
 import media from '../libs/MediaQuery';
 
@@ -103,7 +104,7 @@ const SubmitButton = styled.button`
 
 const SignIn = props => {
   const [isIntro, setIntro] = useState(true);
-  const [isExist, setExist] = useState(false);
+  const [isExist, setExist] = useState(true);
   const [email, setEmail] = useState();
 
   const writeEmail = e => {
@@ -113,7 +114,9 @@ const SignIn = props => {
   return (
     <SignInWrapper>
       <Logo>
-        <img src="/images/logo.png" alt="festa!" />
+        <Link to="/">
+          <img src="/images/logo.png" alt="Festa!" />
+        </Link>
       </Logo>
       <A11yTitle>로그인 페이지</A11yTitle>
       <FormArea>

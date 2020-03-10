@@ -47,9 +47,9 @@ const Home = props => {
           가장 쉬운 방법!
         </VisualTitle>
       </VisualArea>
-      <EventSection title="무료 이벤트" />
-      <EventSection title="유료 이벤트" />
-      <EventSection title="외부 이벤트" />
+      <EventSection category="무료" />
+      <EventSection category="유료" />
+      <EventSection category="외부" />
     </>
   );
 };
