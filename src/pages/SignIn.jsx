@@ -11,16 +11,20 @@ const SignInWrapper = styled.section`
   position: relative;
   width: 100%;
   min-height: 100vh;
-  padding: 100px 30px;
+  padding: 100px 60px;
   background: url('/images/visual.jpg') 0 0 no-repeat;
   background-size: cover;
 `;
 
 const Logo = styled.h1`
   position: absolute;
-  top: 15px;
-  left: 30px;
+  top: 20px;
+  left: 60px;
   width: 100px;
+
+  a {
+    display: block;
+  }
 
   img {
     width: 100%;

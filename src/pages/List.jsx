@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import styled from 'styled-components';
 import Header from '../components/Header';
+
+const ListSection = styled.section`
+  padding: 60px;
+  min-height: 100vh;
+`;
+
+const SectionTitle = styled.h2`
+  font-size: 3rem;
+`;
 
 const List = props => {
   const location = useLocation();
@@ -16,8 +26,9 @@ const List = props => {
   return (
     <>
       <Header />
-
-      <div>{category}</div>
+      <ListSection>
+        <SectionTitle>{category}에 참여해보세요!</SectionTitle>
+      </ListSection>
     </>
   );
 };

@@ -1,13 +1,19 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
+import styled, { css } from 'styled-components';
+import { Link, useLocation } from 'react-router-dom';
 import media from '../../libs/MediaQuery';
 
 const HeaderWrapper = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
+  padding: 15px 60px;
+
+  ${({ isMain }) =>
+    !isMain &&
+    css`
+      background: #000;
+    `}
 
   ${media.mobile`
     height: 110px;
@@ -125,12 +131,26 @@ const SignOut = styled.button`
 
 const Header = props => {
   const [isSignIn, setSignIn] = useState(false);
+  const [isMain, setIsMain] = useState();
+  const location = useLocation();
+
+  useLayoutEffect(() => {
+    const { pathname } = location;
+
+    if (pathname === '/') setIsMain(true);
+    else setIsMain(false);
+  }, [location]);
+
+  useEffect(() => {
+    console.log(isMain);
+  }, [isMain]);
+
   const setAlram = () => {
     alert('로그인이 필요한 기능입니다.');
   };
 
   return (
-    <HeaderWrapper>
+    <HeaderWrapper isMain={isMain}>
       <Logo>
         <Link to="/">
           <img src="/images/logo.png" alt="Festa!" />

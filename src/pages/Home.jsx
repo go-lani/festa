@@ -9,7 +9,7 @@ const VisualArea = styled.section`
   align-items: center;
   height: 80vh;
   margin: -70px 0 0;
-  padding: 70px;
+  padding: 70px 60px;
   background: url('/images/visual.jpg') center bottom no-repeat;
   background-size: cover;
 
