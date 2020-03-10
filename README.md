@@ -8,3 +8,4 @@
 - react-router-dom
 - react-error-boundary
 - styled-components
+- uuid

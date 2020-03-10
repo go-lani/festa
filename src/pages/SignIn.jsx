@@ -14,6 +14,10 @@ const SignInWrapper = styled.section`
   padding: 100px 60px;
   background: url('/images/visual.jpg') 0 0 no-repeat;
   background-size: cover;
+
+  ${media.mobile`
+    padding: 100px 30px;
+  `}
 `;
 
 const Logo = styled.h1`
@@ -31,6 +35,7 @@ const Logo = styled.h1`
   }
 
   ${media.mobile`
+    left: 30px;
     width: 80px;
   `}
 `;

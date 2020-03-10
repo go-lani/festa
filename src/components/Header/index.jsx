@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { Link, useLocation } from 'react-router-dom';
 import media from '../../libs/MediaQuery';
@@ -7,17 +7,31 @@ const HeaderWrapper = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
+  z-index: 1;
   padding: 15px 60px;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.7) 10%,
+    rgba(0, 0, 0, 0)
+  );
 
   ${({ isMain }) =>
     !isMain &&
     css`
       background: #000;
+      background-image: none;
     `}
 
   ${media.mobile`
     height: 110px;
+    padding: 15px 30px;
     flex-direction: column;
+      background-image: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.7) 80%,
+      rgba(0, 0, 0, 0)
+    );
   `}
 `;
 
@@ -32,6 +46,7 @@ const Logo = styled.h1`
   }
 
   ${media.mobile`
+    width: 80px;
     align-self: flex-start;
   `}
 `;
@@ -134,16 +149,12 @@ const Header = props => {
   const [isMain, setIsMain] = useState();
   const location = useLocation();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const { pathname } = location;
 
     if (pathname === '/') setIsMain(true);
     else setIsMain(false);
   }, [location]);
-
-  useEffect(() => {
-    console.log(isMain);
-  }, [isMain]);
 
   const setAlram = () => {
     alert('로그인이 필요한 기능입니다.');
