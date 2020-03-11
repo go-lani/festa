@@ -101,19 +101,19 @@ select::-ms-expand {
 }
 
 ::-webkit-input-placeholder {
-	color: #777777;
+	color: #dedede;
 }
 
 ::-moz-placeholder {
-	color: #777777;
+	color: #dedede;
 }
 
 :-ms-input-placeholder {
-	color: #777777;
+	color: #dedede;
 }
 
 :-moz-placeholder {
-	color: #777777;
+	color: #dedede;
 }
 
 input[type=text] {

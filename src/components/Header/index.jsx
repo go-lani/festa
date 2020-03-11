@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { Link, useLocation } from 'react-router-dom';
 import media from '../../libs/MediaQuery';
+import KeywordPopup from './KeywordPopup';
 
 const HeaderWrapper = styled.header`
   display: flex;
@@ -119,16 +120,18 @@ const LoginMenu = styled.div`
   }
 
   .signin-button {
-    background: #436eef;
+    min-width: 68px;
     padding: 8px 10px;
-    font-size: 1.6rem;
     border: none;
     border-radius: 3px;
+    background: #436eef;
+    font-size: 1.6rem;
   }
 `;
 
 const Greeting = styled.p`
   font-size: 1.6rem;
+  word-break: keep-all;
 `;
 
 const Member = styled.em`
@@ -137,16 +140,18 @@ const Member = styled.em`
 `;
 
 const SignOut = styled.button`
-  background: #436eef;
+  min-width: 68px;
   padding: 8px 10px;
-  font-size: 1.6rem;
   border: none;
   border-radius: 3px;
+  background: #436eef;
+  font-size: 1.6rem;
 `;
 
 const Header = props => {
-  const [isSignIn, setSignIn] = useState(false);
+  const [isSignIn, setSignIn] = useState(true);
   const [isMain, setIsMain] = useState();
+  const [keyWordVisible, setKeyWordVisible] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -157,36 +162,44 @@ const Header = props => {
   }, [location]);
 
   const setAlram = () => {
-    alert('로그인이 필요한 기능입니다.');
+    if (isSignIn) setKeyWordVisible(true);
+    else alert('로그인이 필요한 기능입니다.');
+  };
+
+  const hideKeywordPopup = () => {
+    setKeyWordVisible(false);
   };
 
   return (
-    <HeaderWrapper isMain={isMain}>
-      <Logo>
-        <Link to="/">
-          <img src="/images/logo.png" alt="Festa!" />
-        </Link>
-      </Logo>
-      <Menu>
-        <KeywordAlarm onClick={setAlram}>
-          <img src="/images/alram.png" alt="알람설정" />
-        </KeywordAlarm>
-        <LoginMenu>
-          {isSignIn ? (
-            <>
-              <Greeting>
-                <Member>이철환</Member>님 어서오세요!
-              </Greeting>
-              <SignOut>로그아웃</SignOut>
-            </>
-          ) : (
-            <Link to="/signin" className="signin-button">
-              로그인
-            </Link>
-          )}
-        </LoginMenu>
-      </Menu>
-    </HeaderWrapper>
+    <>
+      <HeaderWrapper isMain={isMain}>
+        <Logo>
+          <Link to="/">
+            <img src="/images/logo.png" alt="Festa!" />
+          </Link>
+        </Logo>
+        <Menu>
+          <KeywordAlarm onClick={setAlram}>
+            <img src="/images/alram.png" alt="알람설정" />
+          </KeywordAlarm>
+          <LoginMenu>
+            {isSignIn ? (
+              <>
+                <Greeting>
+                  <Member>이철환</Member>님 어서오세요!
+                </Greeting>
+                <SignOut>로그아웃</SignOut>
+              </>
+            ) : (
+              <Link to="/signin" className="signin-button">
+                로그인
+              </Link>
+            )}
+          </LoginMenu>
+        </Menu>
+      </HeaderWrapper>
+      <KeywordPopup visible={keyWordVisible} hide={hideKeywordPopup} />
+    </>
   );
 };
 

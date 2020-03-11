@@ -48,8 +48,8 @@ const ImgBox = styled.div`
     width: 100%;
   }
 
-  ${({ end }) =>
-    end &&
+  ${({ isEnd }) =>
+    isEnd &&
     css`
       &:before {
         display: flex;
@@ -173,7 +173,7 @@ const EventListItem = ({
   return (
     <Item>
       <Link to={`/view?category=${category}&detail=${id}`}>
-        <ImgBox end={apply === '이벤트 종료'}>
+        <ImgBox isEnd={apply === '이벤트 종료'}>
           <img src={image} alt={title} />
         </ImgBox>
         <InfoBox>
