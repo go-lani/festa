@@ -32,20 +32,23 @@ const settings = {
   ],
 };
 
-const EventSlider = React.memo(({ ticketItems, category, onSelectTicket }) => {
-  return (
-    <Slider {...settings}>
-      {ticketItems &&
-        ticketItems.map(ticket => (
-          <EventItem
-            key={uuidv4()}
-            category={category}
-            ticket={ticket}
-            onSelectTicket={onSelectTicket}
-          />
-        ))}
-    </Slider>
-  );
-});
+const EventSlider = React.memo(
+  ({ ticketItems, category, onSelectTicket, selectTicket }) => {
+    return (
+      <Slider {...settings}>
+        {ticketItems &&
+          ticketItems.map(ticket => (
+            <EventItem
+              key={uuidv4()}
+              category={category}
+              ticket={ticket}
+              onSelectTicket={onSelectTicket}
+              selectTicket={selectTicket}
+            />
+          ))}
+      </Slider>
+    );
+  },
+);
 
 export default EventSlider;

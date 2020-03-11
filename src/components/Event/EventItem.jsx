@@ -1,36 +1,54 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-// title: "이벤트 이름"
-// host: "이벤트 주최자"
-// date: "이벤트 날짜"
-// content: "이벤트 내용"
-// apply: "이벤트 신청"
-// tickets: "무료"
-// link: "외부이벤트 링크"
-// image: "https://cf.festa.io/img/2020-3-11/0b8b10b6-dc1f-4
+const Item = styled.div`
+  position: relative;
+  background: #152638;
+  border-width: 2px;
+  border-style: solid;
+  border-color: transparent;
+  transition: all 0.3s;
+  cursor: pointer;
 
-const Item = styled.div``;
+  ${({ isSelect }) =>
+    isSelect &&
+    css`
+      border-color: #ff2d54;
+    `}
+
+  &:hover {
+    img {
+      transform: scale(1.04);
+    }
+  }
+`;
 
 const ImgBox = styled.div`
+  overflow: hidden;
   img {
     width: 100%;
+    transform: scale(1);
+    transition: all 0.8s;
   }
 `;
 
 const Title = styled.p`
   overflow: hidden;
-  padding: 5px;
+  padding: 10px;
   font-size: 1.6rem;
   color: #fff;
   word-break: keep-all;
   white-space: nowrap;
   text-overflow: ellipsis;
+  color: #fff;
 `;
 
-const EventItem = ({ ticket, category, onSelectTicket }) => {
+const EventItem = ({ ticket, category, onSelectTicket, selectTicket }) => {
   return (
-    <Item onClick={() => onSelectTicket(ticket, category)}>
+    <Item
+      isSelect={selectTicket && selectTicket.ticket.id === ticket.id}
+      onClick={() => onSelectTicket(ticket, category)}
+    >
       <ImgBox>
         <img src={ticket.image} alt={ticket.title} />
       </ImgBox>
