@@ -10,3 +10,5 @@
 - styled-components
 - uuid
 - axios
+- react-slick
+- slick-carousel

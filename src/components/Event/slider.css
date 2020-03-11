@@ -1,0 +1,50 @@
+@import "~slick-carousel/slick/slick.css";
+
+.slick-slider {
+	position: relative;
+}
+
+.slick-slide {
+	padding: 0 5px;
+}
+
+@media all and (min-width: 1025px) {
+	.slick-slider {
+		position: relative;
+		margin: 0 -60px 0 0;
+	}
+
+	.slick-slider .slick-prev, .slick-slider .slick-next {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		z-index: 1;
+		width: 4vw;
+		border: none;
+		font-size: 0;
+	}
+
+	.slick-slider .slick-prev {
+		left: calc(-2vw - 20px);
+		background: url('/images/arr-left-white-36x70.png') center center no-repeat;
+		background-size: 25% auto;
+	}
+
+	.slick-slider .slick-next {
+		right: 0;
+		background: rgba(0,0,0,0.6) url('/images/arr-right-white-36x70.png') center center no-repeat;
+		background-size: 25% auto;
+	}
+}
+
+@media all and (min-width: 769px) and (max-width: 1024px) {
+	.slick-slider {
+		margin: 0;
+	}
+}
+
+@media all and (max-width: 768px) {
+	.slick-slider {
+		margin: 0;
+	}
+}

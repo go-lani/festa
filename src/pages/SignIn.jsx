@@ -124,13 +124,12 @@ const SignIn = props => {
   };
 
   const checkUser = async () => {
-    const username = emailInput.current.value;
-    console.log('username', username);
+    const email = emailInput.current.value;
     const data = await axios.get(
-      'https://festacrawling.xyz/members/check-user/',
+      'https://festacrawling.xyz/members/check-user',
       {
         params: {
-          username,
+          email,
         },
       },
     );
@@ -163,7 +162,7 @@ const SignIn = props => {
                   />
                 </InputBox>
               </FieldSet>
-              <SubmitButton onClick={checkUser}>
+              <SubmitButton type="button" onClick={checkUser}>
                 로그인 또는 가입하기
               </SubmitButton>
             </>
