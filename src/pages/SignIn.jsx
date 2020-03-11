@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -67,7 +67,16 @@ const Form = styled.form`
   margin: 20px 0 0;
 `;
 
-const FieldSet = styled.fieldset``;
+const FieldSet = styled.fieldset`
+  legend {
+    display: block;
+    width: 100%;
+    font-weight: 700;
+    font-size: 2rem;
+    color: #486cdc;
+    margin: 0 0 20px;
+  }
+`;
 
 const InputBox = styled.div`
   display: flex;
@@ -114,9 +123,12 @@ const SubmitButton = styled.button`
 
 const SignIn = props => {
   const [isIntro, setIntro] = useState(true);
-  const [isExist, setExist] = useState(true);
+  const [isExist, setExist] = useState();
   const [email, setEmail] = useState();
-  const emailInput = useRef();
+  const introEmailInput = useRef();
+  const signInPasswordInput = useRef();
+  const signUpUsernameInput = useRef();
+  const signUpPasswordInput = useRef();
 
   const writeEmail = e => {
     const email = e.target.value.trim();
@@ -124,19 +136,77 @@ const SignIn = props => {
   };
 
   const checkUser = async () => {
-    // const email = emailInput.current.value;
-    const data = await axios.get(
-      'https://festacrawling.xyz/members/check-user',
-      {
-        params: {
-          email: 'test@test.test',
-        },
-      },
-    );
+    // eslint-disable-next-line no-useless-escape
+    const validate = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,4}$/i;
 
-    console.log('data', data);
-    // setIntro(false);
+    if (!email) return alert('이메일을 작성해주세요.');
+    if (!validate.test(email)) return alert('이메일 형식을 확인해주세요.');
+
+    console.log(email);
+    try {
+      const { data } = await axios.get(
+        'https://festacrawling.xyz/members/check-user',
+        {
+          params: {
+            email,
+          },
+        },
+      );
+
+      console.log('check', data);
+      setIntro(false);
+      setExist(data.isExist);
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  const checkSignUp = async () => {
+    const username = signUpUsernameInput.current.value.trim();
+    const password = signUpPasswordInput.current.value;
+
+    if (!username || !password) return alert('작성 값을 다시 확인해주세요.');
+
+    try {
+      const { data } = await axios.post(
+        'https://festacrawling.xyz/members/create-user/',
+        {
+          email,
+          password,
+        },
+      );
+
+      if (data.detail) setExist(true);
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+
+  const checkSignIn = async () => {
+    const password = signInPasswordInput.current.value;
+
+    if (!password) return alert('비밀번호를 다시 확인해주세요.');
+
+    try {
+      const { data } = await axios.post(
+        'https://festacrawling.xyz/members/auth-token/',
+        {
+          email,
+          password,
+        },
+      );
+
+      console.log(data);
+    } catch (error) {
+      if (error.response.data.detail)
+        return alert('비밀번호가 틀렸습니다. 다시 확인해주세요');
+    }
+  };
+
+  useEffect(() => {
+    console.log(isExist);
+  }, [isExist]);
+
   return (
     <SignInWrapper>
       <Logo>
@@ -147,7 +217,11 @@ const SignIn = props => {
       <A11yTitle>로그인 페이지</A11yTitle>
       <FormArea>
         <Greeting>우리 함께 해볼까요?</Greeting>
-        <Form>
+        <Form
+          onSubmit={e => {
+            e.preventDefault();
+          }}
+        >
           {isIntro && (
             <>
               <FieldSet>
@@ -155,8 +229,8 @@ const SignIn = props => {
                 <InputBox>
                   <label htmlFor="email">아이디</label>
                   <Input
-                    type="email"
-                    ref={emailInput}
+                    type="text"
+                    ref={introEmailInput}
                     id="email"
                     onChange={writeEmail}
                   />
@@ -167,42 +241,64 @@ const SignIn = props => {
               </SubmitButton>
             </>
           )}
-          {!isIntro && isExist && (
+          {!isIntro && !isExist && (
             <>
               <FieldSet>
-                <A11yTitle as="legend">로그인 영역</A11yTitle>
+                <legend>로그인을 해주세요</legend>
                 <InputBox>
-                  <label htmlFor="email">이메일</label>
-                  <Input type="email" id="email" value={email} readOnly />
+                  <label htmlFor="signin-email">이메일</label>
+                  <Input
+                    type="email"
+                    id="signin-email"
+                    value={email}
+                    readOnly
+                  />
                 </InputBox>
                 <InputBox>
-                  <label htmlFor="email">비밀번호</label>
-                  <Input type="password" id="password" />
+                  <label htmlFor="signin-password">비밀번호</label>
+                  <Input
+                    type="password"
+                    ref={signInPasswordInput}
+                    id="signin-password"
+                  />
                 </InputBox>
               </FieldSet>
-              <SubmitButton onClick={() => setIntro(false)}>
+              <SubmitButton type="button" onClick={checkSignIn}>
                 로그인
               </SubmitButton>
             </>
           )}
-          {!isIntro && !isExist && (
+          {!isIntro && isExist && (
             <>
               <FieldSet>
-                <A11yTitle as="legend">회원가입 영역</A11yTitle>
+                <legend>회원가입을 해주세요</legend>
                 <InputBox>
-                  <label htmlFor="email">이메일</label>
-                  <Input type="email" id="email" value={email} readOnly />
+                  <label htmlFor="signup-email">이메일</label>
+                  <Input
+                    type="email"
+                    id="signup-email"
+                    value={email}
+                    readOnly
+                  />
                 </InputBox>
                 <InputBox>
-                  <label htmlFor="email">사용자 이름</label>
-                  <Input type="text" id="username" />
+                  <label htmlFor="signup-username">사용자 이름</label>
+                  <Input
+                    type="text"
+                    id="signup-username"
+                    ref={signUpUsernameInput}
+                  />
                 </InputBox>
                 <InputBox>
-                  <label htmlFor="email">비밀번호</label>
-                  <Input type="password" id="password" />
+                  <label htmlFor="signup-password">비밀번호</label>
+                  <Input
+                    type="password"
+                    id="signup-password"
+                    ref={signUpPasswordInput}
+                  />
                 </InputBox>
               </FieldSet>
-              <SubmitButton onClick={() => setIntro(false)}>
+              <SubmitButton type="button" onClick={checkSignUp}>
                 가입하기
               </SubmitButton>
             </>

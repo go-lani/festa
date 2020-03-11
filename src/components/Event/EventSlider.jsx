@@ -5,13 +5,15 @@ import './slider.css';
 import EventItem from './EventItem';
 
 const settings = {
-  speed: 500,
   slidesToShow: 4,
   slidesToScroll: 1,
   initialSlide: 0,
-  useTransform: false,
   draggable: false,
   arrows: true,
+  speed: 300,
+  // autoplay: true,
+  // autoplaySpeed: 5000,
+
   responsive: [
     {
       breakpoint: 1024,
@@ -22,11 +24,12 @@ const settings = {
       },
     },
     {
-      breakpoint: 600,
+      breakpoint: 768,
       settings: {
         slidesToShow: 1,
         draggable: true,
         arrows: false,
+        centerMode: true,
       },
     },
   ],
@@ -35,18 +38,22 @@ const settings = {
 const EventSlider = React.memo(
   ({ ticketItems, category, onSelectTicket, selectTicket }) => {
     return (
-      <Slider {...settings}>
-        {ticketItems &&
-          ticketItems.map(ticket => (
-            <EventItem
-              key={uuidv4()}
-              category={category}
-              ticket={ticket}
-              onSelectTicket={onSelectTicket}
-              selectTicket={selectTicket}
-            />
-          ))}
-      </Slider>
+      <>
+        {ticketItems && (
+          <Slider {...settings}>
+            {ticketItems &&
+              ticketItems.map(ticket => (
+                <EventItem
+                  key={uuidv4()}
+                  category={category}
+                  ticket={ticket}
+                  onSelectTicket={onSelectTicket}
+                  selectTicket={selectTicket}
+                />
+              ))}
+          </Slider>
+        )}
+      </>
     );
   },
 );

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Header from '../components/Header';
 import A11yTitle from '../components/Common/A11yTitle';
 import EventSection from '../components/Event/EventSection';
 import media from '../libs/MediaQuery';
+import axios from 'axios';
 
 const VisualArea = styled.section`
   display: flex;
@@ -162,7 +163,7 @@ const dummy = {
         'https://cf.festa.io/img/2020-3-11/0b8b10b6-dc1f-47a5-bdb6-a07c264a5290.jpg',
     },
   ],
-  otherEvent: [
+  outerEvent: [
     {
       id: 11,
       title: '이벤트 이름',
@@ -228,6 +229,11 @@ const dummy = {
 
 const Home = props => {
   const [selectTicket, setSelectTicket] = useState();
+  const [allTicket, setAllTicket] = useState({
+    free: null,
+    pay: null,
+    outerEvent: null,
+  });
 
   const onSelectTicket = (ticket, category) => {
     setSelectTicket(prev => {
@@ -242,6 +248,24 @@ const Home = props => {
     });
   };
 
+  const renderFreeTicket = async category => {
+    const { data } = await axios.get('https://festacrawling.xyz/festalist', {
+      params: {
+        category,
+        page: 1,
+        size: 10,
+      },
+    });
+
+    setAllTicket(prev => ({ ...prev, [category]: data.results }));
+  };
+
+  useEffect(() => {
+    renderFreeTicket('free');
+    renderFreeTicket('pay');
+    renderFreeTicket('outerEvent');
+  }, []);
+
   return (
     <>
       <Header />
@@ -255,19 +279,19 @@ const Home = props => {
       </VisualArea>
       <EventSection
         category="free"
-        ticketData={dummy.free}
+        ticketData={allTicket && allTicket.free}
         selectTicket={selectTicket}
         onSelectTicket={onSelectTicket}
       />
       <EventSection
         category="pay"
-        ticketData={dummy.pay}
+        ticketData={allTicket && allTicket.pay}
         selectTicket={selectTicket}
         onSelectTicket={onSelectTicket}
       />
       <EventSection
-        category="otherEvent"
-        ticketData={dummy.otherEvent}
+        category="outerEvent"
+        ticketData={allTicket && allTicket.outerEvent}
         selectTicket={selectTicket}
         onSelectTicket={onSelectTicket}
       />

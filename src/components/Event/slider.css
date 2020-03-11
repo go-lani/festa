@@ -45,6 +45,6 @@
 
 @media all and (max-width: 768px) {
 	.slick-slider {
-		margin: 0;
+		margin: 0 -30px;
 	}
 }

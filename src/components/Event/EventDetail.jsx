@@ -59,43 +59,20 @@ const InfoTextArea = styled.div``;
 
 const Date = styled.p`
   margin: 0 0 20px;
+  padding: 0 100px 0 0;
   font-size: 1.8rem;
+  word-break: keep-all;
 
   ${media.mobile`
     font-size: 2rem;
+    padding: 0 ;
   `}
 `;
 
 const Title = styled.p`
   margin: 0 0 20px;
-  padding: 0 0 10px;
-  border-bottom: 1px solid #eee;
-  font-size: 1.6rem;
-
-  ${media.mobile`
-    font-size: 2rem;
-  `}
-`;
-
-const Content = styled.p`
-  display: block;
-  display: -webkit-box;
-  margin: 0 0 20px;
-  font-size: 1.4rem;
-  white-space: normal;
-  word-break: keep-all;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  height: 63px;
-  word-wrap: break-word;
-  text-align: left;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-
-  ${media.mobile`
-    font-size: 2rem;
-    height: 90px;
-  `}
+  font-weight: 700;
+  font-size: 2rem;
 `;
 
 const Host = styled.p`
@@ -165,11 +142,14 @@ const ButtonArea = styled.div`
   `}
 `;
 
-const EventDetail = ({ ticket }) => {
+const EventDetail = ({ ticket, category, onSelectTicket }) => {
   const { id, title, content, host, date, image, tickets } = ticket.ticket;
   return (
     <DetailBox>
-      <CloseButton type="button">
+      <CloseButton
+        type="button"
+        onClick={() => onSelectTicket(ticket.ticket, category)}
+      >
         <img src="/images/close-white-40x40.png" alt="닫기" />
       </CloseButton>
       <ImgArea>
@@ -179,13 +159,12 @@ const EventDetail = ({ ticket }) => {
         <InfoTextArea>
           <Date>{date}</Date>
           <Title>{title}</Title>
-          <Content>{content}</Content>
-          <Host>{host}</Host>
+          <Host>주최: {host}</Host>
           <Price>
             {ticket.category === 'free'
-              ? '무료'
+              ? '가격: 무료'
               : ticket.category === 'pay'
-              ? `₩${tickets}`
+              ? `가격: ${tickets}`
               : '외부 이벤트'}
           </Price>
         </InfoTextArea>

@@ -113,7 +113,7 @@ const List = props => {
 
     if (name === 'free') setCategoryTitLE('무료 이벤트');
     if (name === 'pay') setCategoryTitLE('유료 이벤트');
-    if (name === 'otherEvent') setCategoryTitLE('외부 이벤트');
+    if (name === 'outerEvent') setCategoryTitLE('외부 이벤트');
   }, [location]);
 
   return (

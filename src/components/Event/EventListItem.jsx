@@ -5,7 +5,6 @@ import media from '../../libs/MediaQuery';
 
 const Item = styled.li`
   float: left;
-  width: 23.5%;
   margin: 0 0 2% 2%;
   background: #fff;
   color: #222;
@@ -20,6 +19,8 @@ const Item = styled.li`
   }
 
   ${media.desktop`
+    width: 22%;
+    margin: 0 0 2% 4%;
     &:nth-child(4n + 1) {
       clear: both;
       margin-left: 0;
@@ -148,15 +149,6 @@ const Price = styled.em`
     font-size: 2rem;
   `}
 `;
-
-// "title":"이벤트 이름",
-// "host":"이벤트 주최자",
-// "date":"이벤트 날짜",
-// "content":"이벤트 내용",
-// "apply":"이벤트 신청 가능 상태: 외부등록/이벤트 종료/이벤트 신청",
-// "tickets":"티켓 가격",
-// "link":"외부이벤트 링크",
-// "image":"이벤트 사진"
 
 const EventListItem = ({
   id,

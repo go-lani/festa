@@ -63,7 +63,7 @@ const EventSection = React.memo(
     useEffect(() => {
       if (category === 'free') setTitle('무료 이벤트');
       else if (category === 'pay') setTitle('유료 이벤트');
-      else if (category === 'otherEvent') setTitle('외부 이벤트');
+      else if (category === 'outerEvent') setTitle('외부 이벤트');
     }, [category]);
 
     return (
@@ -79,7 +79,11 @@ const EventSection = React.memo(
           selectTicket={selectTicket}
         />
         {selectTicket && category === selectTicket.category && (
-          <EventDetail ticket={selectTicket} />
+          <EventDetail
+            ticket={selectTicket}
+            onSelectTicket={onSelectTicket}
+            category={category}
+          />
         )}
       </EventArea>
     );

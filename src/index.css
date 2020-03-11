@@ -1,3 +1,7 @@
+#root {
+	overflow: hidden;
+}
+
 ::-moz-selection {
 	background: #e50914;
 	color: #ffffff;
