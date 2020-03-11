@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import styled, { css } from 'styled-components';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import A11yTitle from '../components/Common/A11yTitle';
 import media from '../libs/MediaQuery';
 
@@ -115,10 +116,27 @@ const SignIn = props => {
   const [isIntro, setIntro] = useState(true);
   const [isExist, setExist] = useState(true);
   const [email, setEmail] = useState();
+  const emailInput = useRef();
 
   const writeEmail = e => {
     const email = e.target.value.trim();
     setEmail(email);
+  };
+
+  const checkUser = async () => {
+    const username = emailInput.current.value;
+    console.log('username', username);
+    const data = await axios.get(
+      'https://festacrawling.xyz/members/check-user/',
+      {
+        params: {
+          username,
+        },
+      },
+    );
+
+    console.log('data', data);
+    // setIntro(false);
   };
   return (
     <SignInWrapper>
@@ -137,10 +155,15 @@ const SignIn = props => {
                 <A11yTitle as="legend">로그인/회원가입 영역</A11yTitle>
                 <InputBox>
                   <label htmlFor="email">아이디</label>
-                  <Input type="email" id="email" onChange={writeEmail} />
+                  <Input
+                    type="email"
+                    ref={emailInput}
+                    id="email"
+                    onChange={writeEmail}
+                  />
                 </InputBox>
               </FieldSet>
-              <SubmitButton onClick={() => setIntro(false)}>
+              <SubmitButton onClick={checkUser}>
                 로그인 또는 가입하기
               </SubmitButton>
             </>

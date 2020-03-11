@@ -9,3 +9,4 @@
 - react-error-boundary
 - styled-components
 - uuid
+- axios
