@@ -77,7 +77,9 @@ const EventSection = React.memo(
           onSelectTicket={onSelectTicket}
           category={category}
         />
-        {selectTicket && category === selectTicket.category && <EventDetail />}
+        {selectTicket && category === selectTicket.category && (
+          <EventDetail ticket={selectTicket} />
+        )}
       </EventArea>
     );
   },

@@ -124,12 +124,12 @@ const SignIn = props => {
   };
 
   const checkUser = async () => {
-    const email = emailInput.current.value;
+    // const email = emailInput.current.value;
     const data = await axios.get(
       'https://festacrawling.xyz/members/check-user',
       {
         params: {
-          email,
+          email: 'test@test.test',
         },
       },
     );
