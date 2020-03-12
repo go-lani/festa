@@ -59,24 +59,27 @@ const Keyword = styled.li`
   padding: 4px 10px;
   background: #436eef;
   font-size: 1.6rem;
+
+  button {
+    width: 15px;
+    height: 15px;
+    margin: 0 0 0 10px;
+    background: none;
+    border: none;
+
+    img {
+      width: 100%;
+    }
+  }
 `;
 
-const initialKeyword = [
-  {
-    keyword: 'Java',
-  },
-  {
-    keyword: 'JavaScript',
-  },
-];
+const token = localStorage.getItem('token');
 
 const KeywordPopup = ({ visible, hide }) => {
   const keywordInput = useRef();
-  const [keywords, setKeywords] = useState(initialKeyword);
+  const [keywords, setKeywords] = useState();
 
   const getKeyword = async () => {
-    const token = localStorage.getItem('token');
-
     try {
       const { data } = await axios.get(
         'https://festacrawling.xyz/festalist/keyword/',
@@ -86,7 +89,8 @@ const KeywordPopup = ({ visible, hide }) => {
           },
         },
       );
-      console.log(data);
+
+      setKeywords(data.keywords);
     } catch (error) {
       console.log(error);
     }
@@ -98,19 +102,60 @@ const KeywordPopup = ({ visible, hide }) => {
     }
   }, [visible]);
 
+  const addKeyword = async keyword => {
+    try {
+      const { data } = await axios.post(
+        'https://festacrawling.xyz/festalist/keyword/',
+        {
+          keyword,
+        },
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        },
+      );
+
+      if (keywords.length === data.keywords.length)
+        return alert('이미 등록된 키워드입니다.');
+
+      setKeywords(data.keywords);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteKeyword = async id => {
+    try {
+      const { data } = await axios.delete(
+        `https://festacrawling.xyz/festalist/keyword/${id}/`,
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        },
+      );
+
+      setKeywords(data.keywords);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const enterKeyword = ({ target, keyCode }) => {
     const keyword = target.value.trim();
-    if (keyword === '' || keyCode !== 13) return;
+    if (keyCode !== 13) return;
+    if (keyword === '') return alert('키워드를 입력해주세요');
 
-    setKeywords(prev => prev.concat({ keyword }));
+    addKeyword(keyword);
     target.value = '';
   };
 
   const submitKeyword = () => {
     const keyword = keywordInput.current.value.trim();
-    if (keyword === '') return;
+    if (keyword === '') return alert('키워드를 입력해주세요');
 
-    setKeywords(prev => prev.concat({ keyword }));
+    addKeyword(keyword);
     keywordInput.current.value = '';
     keywordInput.current.focus();
   };
@@ -134,7 +179,12 @@ const KeywordPopup = ({ visible, hide }) => {
         <KeywordList>
           {keywords &&
             keywords.map(keyword => (
-              <Keyword key={uuidv4()}>{keyword.keyword}</Keyword>
+              <Keyword key={uuidv4()}>
+                {keyword.keyword}
+                <button type="button" onClick={() => deleteKeyword(keyword.id)}>
+                  <img src="/images/close-white-40x40.png" alt="삭제" />
+                </button>
+              </Keyword>
             ))}
         </KeywordList>
       </KeywordListBox>

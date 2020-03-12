@@ -158,10 +158,7 @@ const ButtonArea = styled.div`
 
 const EventDetail = ({ ticket, category, onSelectTicket }) => {
   const { id, title, host, date, image, tickets } = ticket.ticket;
-  console.log(tickets);
   const a = tickets.split(/\((.+?)\)/g).join('');
-  console.log(a);
-  // console.log(tickets.split(', ('));
   return (
     <DetailBox>
       <CloseButton

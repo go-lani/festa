@@ -15,24 +15,20 @@ const Item = styled.div`
     css`
       border-color: #ff2d54;
     `}
-
-  &:hover {
-    img {
-      transform: scale(1.04);
-    }
-  }
 `;
 
 const ImgBox = styled.div`
   overflow: hidden;
+  position: relative;
   padding: 55% 0 0;
 
-  ${({ image }) =>
-    image &&
-    css`
-      background: #000 url(${image}) center center no-repeat;
-      background-size: 100% auto;
-    `}
+  img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    transform: translate(-50%, -50%);
+  }
 `;
 
 const Title = styled.p`
@@ -52,7 +48,9 @@ const EventItem = ({ ticket, category, onSelectTicket, selectTicket }) => {
       isSelect={selectTicket && selectTicket.ticket.id === ticket.id}
       onClick={() => onSelectTicket(ticket, category)}
     >
-      <ImgBox image={ticket.image} />
+      <ImgBox>
+        <img src={ticket.image} alt={ticket.title} />
+      </ImgBox>
       <Title>{ticket.title}</Title>
     </Item>
   );

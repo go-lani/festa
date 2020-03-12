@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import qs from 'query-string';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Header from '../components/Header';
 import { v4 as uuidv4 } from 'uuid';
 import EventListItem from '../components/Event/EventListItem';
@@ -82,30 +82,37 @@ const Pager = styled.button`
   background: none;
   font-size: 1.4rem;
   color: #fff;
+
+  ${({ isSelect }) =>
+    isSelect &&
+    css`
+      background: red;
+    `}
 `;
 
 const List = props => {
   const location = useLocation();
-  const [categoryTitle, setCategoryTitLE] = useState();
+  const history = useHistory();
+  const [categoryTitle, setCategoryTitle] = useState();
   const [category, setCategory] = useState();
   const [ticketLists, setTicketLists] = useState();
   const [totalPager, setTotalPager] = useState();
   const [currentPager, setCurrentPager] = useState();
-  const [pageCount, setPageCount] = useState(0);
+  const [pageCount, setPageCount] = useState();
+  const [pageNumber, setPageNumber] = useState(1);
 
   const renderPager = useCallback(
     total => {
-      console.log(total);
+      const { page } = qs.parse(location.search);
       const totalPager = [];
-      let num = 12 % 5 ? Math.floor(12 / 5) + 1 : Math.floor(12 / 5);
-      console.log(num);
+      let num = total % 5 ? Math.floor(total / 5) + 1 : Math.floor(total / 5);
 
       for (let i = 1; i <= num; i++) {
         const detail = [];
 
-        if (12 % 5) {
+        if (total % 5) {
           if (i === num) {
-            for (let j = 1; j <= 12 % 5; j++) {
+            for (let j = 1; j <= total % 5; j++) {
               detail.push((i - 1) * 5 + j);
             }
           } else {
@@ -122,20 +129,20 @@ const List = props => {
       }
 
       setTotalPager(totalPager);
-      setCurrentPager(totalPager[pageCount]);
+      setCurrentPager(totalPager[Math.ceil(page / 5 - 1)]);
+      setPageCount(Math.ceil(page / 5 - 1));
     },
-    [pageCount],
+    [location.search],
   );
 
   const renderList = useCallback(async () => {
     const { page } = qs.parse(location.search);
     const name = location.pathname.replace('/list/', '');
-
     setCategory(name);
 
-    if (name === 'free') setCategoryTitLE('무료 이벤트');
-    if (name === 'pay') setCategoryTitLE('유료 이벤트');
-    if (name === 'exterior') setCategoryTitLE('외부 이벤트');
+    if (name === 'free') setCategoryTitle('무료 이벤트');
+    if (name === 'pay') setCategoryTitle('유료 이벤트');
+    if (name === 'exterior') setCategoryTitle('외부 이벤트');
 
     try {
       if (category) {
@@ -143,20 +150,19 @@ const List = props => {
           'https://festacrawling.xyz/festalist',
           {
             params: {
+              category,
               page,
               size: 8,
             },
           },
         );
 
-        console.log(data);
-
-        if (data.data.count % 8) {
-          const totalCount = Math.floor(data.data.count / 8) + 1;
-          // renderPager(totalCount);
+        if (data.count % 8) {
+          const totalCount = Math.floor(data.count / 8) + 1;
+          renderPager(totalCount);
         }
 
-        setTicketLists(data.data.results);
+        setTicketLists(data.results);
       }
     } catch (error) {
       console.log(error);
@@ -165,21 +171,39 @@ const List = props => {
 
   useEffect(() => {
     renderPager();
-  }, [renderPager]);
+    renderList();
+  }, [renderList, renderPager]);
 
   const prevPage = () => {
     if (!pageCount) return alert('첫 페이지입니다');
 
     setPageCount(prev => prev - 1);
-    setCurrentPager(totalPager[pageCount]);
   };
 
   const nextPage = () => {
     if (totalPager.length === pageCount + 1)
       return alert('마지막 페이지입니다');
+
     setPageCount(prev => prev + 1);
-    setCurrentPager(totalPager[pageCount]);
   };
+
+  useEffect(() => {
+    if (pageCount !== undefined) setCurrentPager(totalPager[pageCount]);
+  }, [pageCount, totalPager]);
+
+  const changePage = useCallback(
+    count => {
+      const name = location.pathname.replace('/list/', '');
+      history.push(`/list/${name}?page=${count}`);
+    },
+    [location.pathname, history],
+  );
+
+  useEffect(() => {
+    const { page } = qs.parse(location.search);
+
+    setPageNumber(+page);
+  }, [location.search]);
 
   return (
     <>
@@ -196,11 +220,18 @@ const List = props => {
           <PrevButton onClick={prevPage}>이전</PrevButton>
           <PagingList>
             {currentPager &&
-              currentPager.map(pager => (
-                <Paging key={uuidv4()}>
-                  <Pager>{pager}</Pager>
-                </Paging>
-              ))}
+              currentPager.map(pager => {
+                return (
+                  <Paging key={uuidv4()}>
+                    <Pager
+                      isSelect={pager === pageNumber}
+                      onClick={() => changePage(pager)}
+                    >
+                      {pager}
+                    </Pager>
+                  </Paging>
+                );
+              })}
           </PagingList>
           <NextButton onClick={nextPage}>다음</NextButton>
         </Pagenation>

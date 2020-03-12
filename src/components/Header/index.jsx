@@ -158,7 +158,8 @@ const Header = props => {
   const location = useLocation();
 
   useEffect(() => {
-    if (localStorage.getItem('token')) setSignIn(true);
+    if (localStorage.getItem('token') && user.username && user.email)
+      setSignIn(true);
     else setSignIn(false);
   }, [user]);
 

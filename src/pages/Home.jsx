@@ -59,7 +59,7 @@ const Home = props => {
     });
   };
 
-  const renderFreeTicket = async category => {
+  const renderTicket = async category => {
     const { data } = await axios.get('https://festacrawling.xyz/festalist', {
       params: {
         category,
@@ -68,13 +68,15 @@ const Home = props => {
       },
     });
 
+    console.log(data);
+
     setAllTicket(prev => ({ ...prev, [category]: data.results }));
   };
 
   useEffect(() => {
-    renderFreeTicket('free');
-    renderFreeTicket('pay');
-    renderFreeTicket('exterior');
+    renderTicket('free');
+    renderTicket('pay');
+    renderTicket('exterior');
   }, []);
 
   return (
