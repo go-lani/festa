@@ -68,8 +68,6 @@ const Home = props => {
       },
     });
 
-    console.log(data);
-
     setAllTicket(prev => ({ ...prev, [category]: data.results }));
   };
 

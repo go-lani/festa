@@ -168,6 +168,8 @@ const EventListItem = ({
   image,
   category,
 }) => {
+  const priceInfo = JSON.parse(tickets);
+
   return (
     <Item>
       <Link to={`/view?category=${category}&detail=${id}`}>
@@ -179,11 +181,14 @@ const EventListItem = ({
         </InfoBox>
         <PriceInfoBox>
           <Price>
-            {category === 'free'
-              ? '무료'
-              : category === 'pay'
-              ? `₩${tickets}`
-              : '외부 이벤트'}
+            {category === 'free' && <em>무료</em>}
+            {category === 'exterior' && <em>외부이벤트</em>}
+            {category === 'pay' &&
+              priceInfo.map(info => (
+                <div>
+                  <em>{info.price}</em>
+                </div>
+              ))[0]}
           </Price>
         </PriceInfoBox>
       </Link>

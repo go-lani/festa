@@ -1,8 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import Popup from '../Popup';
 import axios from 'axios';
+import media from '../../libs/MediaQuery';
 
 const Title = styled.p`
   margin: 0 0 30px;
@@ -25,6 +26,11 @@ const Input = styled.input`
   border-width: 0 0 2px;
   background: none;
   font-size: 1.6rem;
+
+  ${media.mobile`
+    width: 80%;
+    font-size: 2rem;
+  `}
 `;
 
 const SubmitButton = styled.button`
@@ -36,6 +42,11 @@ const SubmitButton = styled.button`
   font-size: 1.6rem;
   color: #fff;
   text-align: center;
+
+  ${media.mobile`
+    width: 20%;
+    font-size: 1.8rem;
+  `}
 `;
 
 const KeywordListBox = styled.div`
@@ -73,13 +84,12 @@ const Keyword = styled.li`
   }
 `;
 
-const token = localStorage.getItem('token');
-
 const KeywordPopup = ({ visible, hide }) => {
+  const token = localStorage.getItem('token');
   const keywordInput = useRef();
   const [keywords, setKeywords] = useState();
 
-  const getKeyword = async () => {
+  const getKeyword = useCallback(async () => {
     try {
       const { data } = await axios.get(
         'https://festacrawling.xyz/festalist/keyword/',
@@ -94,13 +104,13 @@ const KeywordPopup = ({ visible, hide }) => {
     } catch (error) {
       console.log(error);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     if (visible) {
       getKeyword();
     }
-  }, [visible]);
+  }, [visible, getKeyword]);
 
   const addKeyword = async keyword => {
     try {

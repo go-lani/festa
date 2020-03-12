@@ -13,13 +13,14 @@ const DetailBox = styled.div`
 const ImgArea = styled.div`
   overflow: hidden;
   width: 45%;
+  max-height: 500px;
   padding: 10px;
   background: #fff;
   border-radius: 0 10px 10px 0;
 
   img {
     width: 100%;
-    height: 100%;
+    min-height: 100%;
   }
 
   ${media.tablet`
@@ -95,11 +96,20 @@ const Host = styled.p`
   `}
 `;
 
-const Price = styled.p`
+const Price = styled.div`
   margin: 0 0 20px;
-  font-weight: 700;
-  font-size: 1.8rem;
-  color: #ff2d54;
+
+  span {
+    display: inline-block;
+    margin: 0 10px 0 0;
+    font-size: 1.8rem;
+  }
+
+  em {
+    display: inline-block;
+    font-weight: 700;
+    font-size: 1.8rem;
+  }
 
   ${media.mobile`
     /* font-size: 1.8rem; */
@@ -158,7 +168,7 @@ const ButtonArea = styled.div`
 
 const EventDetail = ({ ticket, category, onSelectTicket }) => {
   const { id, title, host, date, image, tickets } = ticket.ticket;
-  const a = tickets.split(/\((.+?)\)/g).join('');
+  const priceInfo = JSON.parse(tickets);
   return (
     <DetailBox>
       <CloseButton
@@ -176,11 +186,15 @@ const EventDetail = ({ ticket, category, onSelectTicket }) => {
           <Title>{title}</Title>
           <Host>주최자: {host}</Host>
           <Price>
-            {ticket.category === 'free'
-              ? '무료'
-              : ticket.category === 'pay'
-              ? `가격: ${tickets}`
-              : '외부 이벤트'}
+            {ticket.category === 'free' && <em>무료</em>}
+            {ticket.category === 'exterior' && <em>외부이벤트</em>}
+            {ticket.category === 'pay' &&
+              priceInfo.map(info => (
+                <div>
+                  <span>{info.name}:</span>
+                  <em>{info.price}</em>
+                </div>
+              ))}
           </Price>
         </InfoTextArea>
         <ButtonArea>
