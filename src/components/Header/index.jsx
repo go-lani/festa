@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import styled, { css } from 'styled-components';
 import { Link, useLocation } from 'react-router-dom';
 import media from '../../libs/MediaQuery';
 import KeywordPopup from './KeywordPopup';
+import UserContext from '../../contexts/UserContext';
+import axios from 'axios';
 
 const HeaderWrapper = styled.header`
   display: flex;
@@ -149,10 +151,16 @@ const SignOut = styled.button`
 `;
 
 const Header = props => {
-  const [isSignIn, setSignIn] = useState(true);
+  const { user } = useContext(UserContext);
+  const [isSignIn, setSignIn] = useState(false);
   const [isMain, setIsMain] = useState();
   const [keyWordVisible, setKeyWordVisible] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    if (localStorage.getItem('token')) setSignIn(true);
+    else setSignIn(false);
+  }, [user]);
 
   useEffect(() => {
     const { pathname } = location;
@@ -168,6 +176,28 @@ const Header = props => {
 
   const hideKeywordPopup = () => {
     setKeyWordVisible(false);
+  };
+
+  const signOut = async () => {
+    const token = localStorage.getItem('token');
+
+    try {
+      const { data } = await axios.get(
+        'https://festacrawling.xyz/members/logout-user/',
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        },
+      );
+
+      if (data.detail === '로그아웃 하셨습니다.') {
+        localStorage.removeItem('token');
+        setSignIn(false);
+      }
+    } catch (error) {
+      console.log(error.response.data.detail);
+    }
   };
 
   return (
@@ -186,9 +216,11 @@ const Header = props => {
             {isSignIn ? (
               <>
                 <Greeting>
-                  <Member>이철환</Member>님 어서오세요!
+                  <Member>{user.username}</Member>님 어서오세요!
                 </Greeting>
-                <SignOut>로그아웃</SignOut>
+                <SignOut type="button" onClick={signOut}>
+                  로그아웃
+                </SignOut>
               </>
             ) : (
               <Link to="/signin" className="signin-button">

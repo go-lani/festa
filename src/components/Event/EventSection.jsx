@@ -63,14 +63,14 @@ const EventSection = React.memo(
     useEffect(() => {
       if (category === 'free') setTitle('무료 이벤트');
       else if (category === 'pay') setTitle('유료 이벤트');
-      else if (category === 'outerEvent') setTitle('외부 이벤트');
+      else if (category === 'exterior') setTitle('외부 이벤트');
     }, [category]);
 
     return (
       <EventArea>
         <TitleArea>
           <CategoryTitle>{title}</CategoryTitle>
-          <Link to={`/list/${category}`}>전체보기</Link>
+          <Link to={`/list/${category}?page=1`}>전체보기</Link>
         </TitleArea>
         <EventSlider
           ticketItems={ticketData}

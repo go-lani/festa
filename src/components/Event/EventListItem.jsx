@@ -45,6 +45,12 @@ const Item = styled.li`
 
 const ImgBox = styled.div`
   position: relative;
+  padding-top: 70%;
+  ${({ image }) =>
+    image &&
+    css`
+      background: url(${image}) center center / cover no-repeat;
+    `}
   img {
     width: 100%;
   }
@@ -98,7 +104,7 @@ const Title = styled.p`
   display: -webkit-box;
   overflow: hidden;
   width: 100%;
-  max-height: 56px;
+  height: 56px;
   margin: 10px 0 0;
   white-space: normal;
   text-overflow: ellipsis;
@@ -165,9 +171,7 @@ const EventListItem = ({
   return (
     <Item>
       <Link to={`/view?category=${category}&detail=${id}`}>
-        <ImgBox isEnd={apply === '이벤트 종료'}>
-          <img src={image} alt={title} />
-        </ImgBox>
+        <ImgBox image={image} isEnd={apply === '이벤트 종료'} />
         <InfoBox>
           <Date>{date}</Date>
           <Title>{title}</Title>

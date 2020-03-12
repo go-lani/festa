@@ -1,9 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import styled, { css } from 'styled-components';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
 import A11yTitle from '../components/Common/A11yTitle';
 import media from '../libs/MediaQuery';
+import UserContext from '../contexts/UserContext';
 
 const SignInWrapper = styled.section`
   display: flex;
@@ -122,6 +123,8 @@ const SubmitButton = styled.button`
 `;
 
 const SignIn = props => {
+  const history = useHistory();
+  const { addUser } = useContext(UserContext);
   const [isIntro, setIntro] = useState(true);
   const [isExist, setExist] = useState();
   const [email, setEmail] = useState();
@@ -142,7 +145,6 @@ const SignIn = props => {
     if (!email) return alert('이메일을 작성해주세요.');
     if (!validate.test(email)) return alert('이메일 형식을 확인해주세요.');
 
-    console.log(email);
     try {
       const { data } = await axios.get(
         'https://festacrawling.xyz/members/check-user',
@@ -153,7 +155,6 @@ const SignIn = props => {
         },
       );
 
-      console.log('check', data);
       setIntro(false);
       setExist(data.isExist);
     } catch (error) {
@@ -172,6 +173,7 @@ const SignIn = props => {
         'https://festacrawling.xyz/members/create-user/',
         {
           email,
+          username,
           password,
         },
       );
@@ -196,16 +198,19 @@ const SignIn = props => {
         },
       );
 
-      console.log(data);
+      localStorage.setItem('token', data.token);
+
+      addUser({
+        username: data.user.username,
+        email: data.user.email,
+      });
+
+      history.push('/');
     } catch (error) {
       if (error.response.data.detail)
         return alert('비밀번호가 틀렸습니다. 다시 확인해주세요');
     }
   };
-
-  useEffect(() => {
-    console.log(isExist);
-  }, [isExist]);
 
   return (
     <SignInWrapper>
@@ -241,7 +246,7 @@ const SignIn = props => {
               </SubmitButton>
             </>
           )}
-          {!isIntro && !isExist && (
+          {!isIntro && isExist && (
             <>
               <FieldSet>
                 <legend>로그인을 해주세요</legend>
@@ -268,7 +273,7 @@ const SignIn = props => {
               </SubmitButton>
             </>
           )}
-          {!isIntro && isExist && (
+          {!isIntro && !isExist && (
             <>
               <FieldSet>
                 <legend>회원가입을 해주세요</legend>

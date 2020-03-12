@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import Popup from '../Popup';
+import axios from 'axios';
 
 const Title = styled.p`
   margin: 0 0 30px;
@@ -72,6 +73,30 @@ const initialKeyword = [
 const KeywordPopup = ({ visible, hide }) => {
   const keywordInput = useRef();
   const [keywords, setKeywords] = useState(initialKeyword);
+
+  const getKeyword = async () => {
+    const token = localStorage.getItem('token');
+
+    try {
+      const { data } = await axios.get(
+        'https://festacrawling.xyz/festalist/keyword/',
+        {
+          headers: {
+            Authorization: `Token ${token}`,
+          },
+        },
+      );
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (visible) {
+      getKeyword();
+    }
+  }, [visible]);
 
   const enterKeyword = ({ target, keyCode }) => {
     const keyword = target.value.trim();

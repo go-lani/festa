@@ -55,7 +55,12 @@ const InfoArea = styled.div`
   `}
 `;
 
-const InfoTextArea = styled.div``;
+const InfoTextArea = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+  height: 100%;
+`;
 
 const Date = styled.p`
   margin: 0 0 20px;
@@ -65,30 +70,39 @@ const Date = styled.p`
 
   ${media.mobile`
     font-size: 2rem;
-    padding: 0 ;
+    padding: 0;
   `}
 `;
 
 const Title = styled.p`
   margin: 0 0 20px;
   font-weight: 700;
-  font-size: 2rem;
+  font-size: 2.8rem;
+  word-break: keep-all;
+
+  ${media.mobile`
+    /* font-size: 2rem; */
+    /* padding: 0; */
+  `}
 `;
 
 const Host = styled.p`
   margin: 0 0 20px;
-  font-size: 1.4rem;
+  font-size: 2rem;
 
   ${media.mobile`
-    font-size: 1.6rem;
+    /* font-size: 1.6rem; */
   `}
 `;
 
 const Price = styled.p`
-  font-size: 1.6rem;
+  margin: 0 0 20px;
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: #ff2d54;
 
   ${media.mobile`
-    font-size: 1.8rem;
+    /* font-size: 1.8rem; */
   `}
 `;
 
@@ -122,9 +136,9 @@ const ButtonArea = styled.div`
 
   a {
     display: inline-block;
-    padding: 10px 20px;
+    padding: 10px 50px;
     background: #436eef;
-    font-size: 1.4rem;
+    font-size: 1.8rem;
     color: #fff;
     text-align: center;
   }
@@ -143,7 +157,11 @@ const ButtonArea = styled.div`
 `;
 
 const EventDetail = ({ ticket, category, onSelectTicket }) => {
-  const { id, title, content, host, date, image, tickets } = ticket.ticket;
+  const { id, title, host, date, image, tickets } = ticket.ticket;
+  console.log(tickets);
+  const a = tickets.split(/\((.+?)\)/g).join('');
+  console.log(a);
+  // console.log(tickets.split(', ('));
   return (
     <DetailBox>
       <CloseButton
@@ -159,10 +177,10 @@ const EventDetail = ({ ticket, category, onSelectTicket }) => {
         <InfoTextArea>
           <Date>{date}</Date>
           <Title>{title}</Title>
-          <Host>주최: {host}</Host>
+          <Host>주최자: {host}</Host>
           <Price>
             {ticket.category === 'free'
-              ? '가격: 무료'
+              ? '무료'
               : ticket.category === 'pay'
               ? `가격: ${tickets}`
               : '외부 이벤트'}

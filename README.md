@@ -18,3 +18,4 @@
 - axios
 - react-slick
 - slick-carousel
+- query-string
