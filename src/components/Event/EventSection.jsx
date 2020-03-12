@@ -26,7 +26,7 @@ const TitleArea = styled.div`
     position: relative;
     background: none;
     border: none;
-    font-size: 1.4rem;
+    font-size: 1.8rem;
 
     &:before {
       content: '';
@@ -49,6 +49,10 @@ const TitleArea = styled.div`
         transform: scale(1);
       }
     }
+
+    ${media.desktop`
+      font-size: 1.6rem;
+    `}
   }
 `;
 

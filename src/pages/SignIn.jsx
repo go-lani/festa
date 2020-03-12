@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import { Link, useHistory } from 'react-router-dom';
 import axios from 'axios';
@@ -137,6 +137,15 @@ const SignIn = props => {
     const email = e.target.value.trim();
     setEmail(email);
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      history.push('/');
+      return alert('이미 로그인되어 있습니다.');
+    }
+  }, [history]);
 
   const checkUser = async () => {
     // eslint-disable-next-line no-useless-escape

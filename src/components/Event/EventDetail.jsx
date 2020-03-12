@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 import media from '../../libs/MediaQuery';
 
 const DetailBox = styled.div`
@@ -190,7 +191,7 @@ const EventDetail = ({ ticket, category, onSelectTicket }) => {
             {ticket.category === 'exterior' && <em>외부이벤트</em>}
             {ticket.category === 'pay' &&
               priceInfo.map(info => (
-                <div>
+                <div key={uuidv4()}>
                   <span>{info.name}:</span>
                   <em>{info.price}</em>
                 </div>

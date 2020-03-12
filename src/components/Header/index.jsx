@@ -132,8 +132,12 @@ const LoginMenu = styled.div`
 `;
 
 const Greeting = styled.p`
-  font-size: 1.6rem;
+  font-size: 1.8rem;
   word-break: keep-all;
+
+  ${media.desktop`
+    font-size: 1.6rem;
+  `}
 `;
 
 const Member = styled.em`

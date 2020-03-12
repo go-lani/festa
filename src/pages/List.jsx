@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useLocation, useHistory } from 'react-router-dom';
 import qs from 'query-string';
+import { v4 as uuidv4 } from 'uuid';
+import axios from 'axios';
 import styled, { css } from 'styled-components';
 import Header from '../components/Header';
-import { v4 as uuidv4 } from 'uuid';
 import EventListItem from '../components/Event/EventListItem';
 import media from '../libs/MediaQuery';
-import axios from 'axios';
 
 const ListSection = styled.section`
   padding: 60px;
@@ -36,6 +36,10 @@ const Pagenation = styled.div`
   justify-content: center;
   align-items: center;
   margin: 50px 0 0;
+
+  ${media.mobile`
+    margin: 50px -30px 0;
+  `}
 `;
 
 const PageButton = styled.button`
@@ -50,6 +54,11 @@ const PageButton = styled.button`
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 40% auto;
+
+  ${media.tablet`
+    width: 50px;
+    height: 50px;
+  `}
 `;
 
 const PrevButton = styled(PageButton)`
@@ -82,12 +91,23 @@ const Pager = styled.button`
   background: none;
   font-size: 1.4rem;
   color: #fff;
+  transition: all 0.3s;
 
   ${({ isSelect }) =>
     isSelect &&
     css`
-      background: red;
+      background: #436eef;
     `}
+
+  ${media.tablet`
+    width: 50px;
+    height: 50px;
+    font-size: 2.5rem;
+  `}
+
+  ${media.mobile`
+    font-size: 2rem;
+  `}
 `;
 
 const List = props => {
@@ -157,9 +177,15 @@ const List = props => {
           },
         );
 
-        if (data.count % 8) {
-          const totalCount = Math.floor(data.count / 8) + 1;
-          renderPager(totalCount);
+        if (data.count > 8) {
+          if (data.count % 8) {
+            const totalCount = Math.floor(data.count / 8) + 1;
+            renderPager(totalCount);
+          } else {
+            renderPager(Math.floor(data.count / 8));
+          }
+        } else {
+          renderPager(1);
         }
 
         setTicketLists(data.results);
@@ -168,11 +194,6 @@ const List = props => {
       console.log(error);
     }
   }, [category, location.pathname, location.search, renderPager]);
-
-  useEffect(() => {
-    renderPager();
-    renderList();
-  }, [renderList, renderPager]);
 
   const prevPage = () => {
     if (!pageCount) return alert('첫 페이지입니다');
@@ -187,10 +208,6 @@ const List = props => {
     setPageCount(prev => prev + 1);
   };
 
-  useEffect(() => {
-    if (pageCount !== undefined) setCurrentPager(totalPager[pageCount]);
-  }, [pageCount, totalPager]);
-
   const changePage = useCallback(
     count => {
       const name = location.pathname.replace('/list/', '');
@@ -198,6 +215,15 @@ const List = props => {
     },
     [location.pathname, history],
   );
+
+  useEffect(() => {
+    renderPager();
+    renderList();
+  }, [renderList, renderPager]);
+
+  useEffect(() => {
+    if (pageCount !== undefined) setCurrentPager(totalPager[pageCount]);
+  }, [pageCount, totalPager]);
 
   useEffect(() => {
     const { page } = qs.parse(location.search);

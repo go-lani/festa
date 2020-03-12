@@ -1,5 +1,6 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
+import media from '../../libs/MediaQuery';
 
 const Item = styled.div`
   position: relative;
@@ -34,12 +35,16 @@ const ImgBox = styled.div`
 const Title = styled.p`
   overflow: hidden;
   padding: 10px;
-  font-size: 1.6rem;
+  font-size: 2rem;
   color: #fff;
   word-break: keep-all;
   white-space: nowrap;
   text-overflow: ellipsis;
   color: #fff;
+
+  ${media.desktop`
+    font-size: 1.6rem;
+  `}
 `;
 
 const EventItem = ({ ticket, category, onSelectTicket, selectTicket }) => {
