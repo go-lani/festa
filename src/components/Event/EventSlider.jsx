@@ -11,8 +11,6 @@ const settings = {
   draggable: false,
   arrows: true,
   speed: 300,
-  // autoplay: true,
-  // autoplaySpeed: 5000,
 
   responsive: [
     {

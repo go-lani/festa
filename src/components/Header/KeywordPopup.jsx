@@ -112,28 +112,31 @@ const KeywordPopup = ({ visible, hide }) => {
     }
   }, [visible, getKeyword]);
 
-  const addKeyword = async keyword => {
-    try {
-      const { data } = await axios.post(
-        'https://festacrawling.xyz/festalist/keyword/',
-        {
-          keyword,
-        },
-        {
-          headers: {
-            Authorization: `Token ${token}`,
+  const addKeyword = useCallback(
+    async keyword => {
+      try {
+        const { data } = await axios.post(
+          'https://festacrawling.xyz/festalist/keyword/',
+          {
+            keyword,
           },
-        },
-      );
+          {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          },
+        );
 
-      if (keywords.length === data.keywords.length)
-        return alert('이미 등록된 키워드입니다.');
+        if (keywords.length === data.keywords.length)
+          return alert('이미 등록된 키워드입니다.');
 
-      setKeywords(data.keywords);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+        setKeywords(data.keywords);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [keywords, token],
+  );
 
   const deleteKeyword = async id => {
     try {
@@ -152,15 +155,6 @@ const KeywordPopup = ({ visible, hide }) => {
     }
   };
 
-  const enterKeyword = ({ target, keyCode }) => {
-    const keyword = target.value.trim();
-    if (keyCode !== 13) return;
-    if (keyword === '') return alert('키워드를 입력해주세요');
-
-    addKeyword(keyword);
-    target.value = '';
-  };
-
   const submitKeyword = () => {
     const keyword = keywordInput.current.value.trim();
     if (keyword === '') return alert('키워드를 입력해주세요');
@@ -174,12 +168,7 @@ const KeywordPopup = ({ visible, hide }) => {
     <Popup visible={visible} hide={hide}>
       <Title>알림 받으실 키워드를 등록해주세요</Title>
       <RegisterBox>
-        <Input
-          type="text"
-          ref={keywordInput}
-          placeholder="ex) node.js"
-          onKeyUp={enterKeyword}
-        />
+        <Input type="text" ref={keywordInput} placeholder="ex) node.js" />
         <SubmitButton type="button" onClick={submitKeyword}>
           등록
         </SubmitButton>

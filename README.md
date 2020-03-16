@@ -30,3 +30,4 @@
 - react-slick
 - slick-carousel
 - query-string
+- react-loader-spinner

@@ -4,17 +4,22 @@ import qs from 'query-string';
 import { v4 as uuidv4 } from 'uuid';
 import axios from 'axios';
 import styled, { css } from 'styled-components';
+import Loader from 'react-loader-spinner';
 import Header from '../components/Header';
 import EventListItem from '../components/Event/EventListItem';
 import media from '../libs/MediaQuery';
 
 const ListSection = styled.section`
   padding: 60px;
-  min-height: 100vh;
 
   ${media.mobile`
     padding: 30px;
   `}
+
+  .loader {
+    padding: 100px 0;
+    text-align: center;
+  }
 `;
 
 const SectionTitle = styled.h2`
@@ -120,6 +125,7 @@ const List = props => {
   const [currentPager, setCurrentPager] = useState();
   const [pageCount, setPageCount] = useState();
   const [pageNumber, setPageNumber] = useState(1);
+  const [loading, setLoading] = useState(true);
 
   const renderPager = useCallback(
     total => {
@@ -151,6 +157,10 @@ const List = props => {
       setTotalPager(totalPager);
       setCurrentPager(totalPager[Math.ceil(page / 5 - 1)]);
       setPageCount(Math.ceil(page / 5 - 1));
+
+      setTimeout(() => {
+        setLoading(false);
+      }, 500);
     },
     [location.search],
   );
@@ -166,6 +176,7 @@ const List = props => {
 
     try {
       if (category) {
+        setLoading(true);
         const { data } = await axios.get(
           'https://festacrawling.xyz/festalist',
           {
@@ -236,31 +247,48 @@ const List = props => {
       <Header />
       <ListSection>
         <SectionTitle>{categoryTitle}에 참여해보세요!</SectionTitle>
-        <EventList>
-          {ticketLists &&
-            ticketLists.map(ticket => (
-              <EventListItem key={uuidv4()} {...ticket} category={category} />
-            ))}
-        </EventList>
-        <Pagenation>
-          <PrevButton onClick={prevPage}>이전</PrevButton>
-          <PagingList>
-            {currentPager &&
-              currentPager.map(pager => {
-                return (
-                  <Paging key={uuidv4()}>
-                    <Pager
-                      isSelect={pager === pageNumber}
-                      onClick={() => changePage(pager)}
-                    >
-                      {pager}
-                    </Pager>
-                  </Paging>
-                );
-              })}
-          </PagingList>
-          <NextButton onClick={nextPage}>다음</NextButton>
-        </Pagenation>
+        {loading && (
+          <Loader
+            type="ThreeDots"
+            color="#fff"
+            height={80}
+            width={80}
+            className="loader"
+          />
+        )}
+        {!loading && (
+          <>
+            <EventList>
+              {ticketLists &&
+                ticketLists.map(ticket => (
+                  <EventListItem
+                    key={uuidv4()}
+                    {...ticket}
+                    category={category}
+                  />
+                ))}
+            </EventList>
+            <Pagenation>
+              <PrevButton onClick={prevPage}>이전</PrevButton>
+              <PagingList>
+                {currentPager &&
+                  currentPager.map(pager => {
+                    return (
+                      <Paging key={uuidv4()}>
+                        <Pager
+                          isSelect={pager === pageNumber}
+                          onClick={() => changePage(pager)}
+                        >
+                          {pager}
+                        </Pager>
+                      </Paging>
+                    );
+                  })}
+              </PagingList>
+              <NextButton onClick={nextPage}>다음</NextButton>
+            </Pagenation>
+          </>
+        )}
       </ListSection>
     </>
   );
