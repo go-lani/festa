@@ -188,8 +188,6 @@ const List = (props) => {
           },
         );
 
-        console.log(data);
-
         if (data.count > 8) {
           if (data.count % 8) {
             const totalCount = Math.floor(data.count / 8) + 1;
