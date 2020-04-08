@@ -115,7 +115,7 @@ const Pager = styled.button`
   `}
 `;
 
-const List = props => {
+const List = (props) => {
   const location = useLocation();
   const history = useHistory();
   const [categoryTitle, setCategoryTitle] = useState();
@@ -128,7 +128,7 @@ const List = props => {
   const [loading, setLoading] = useState(true);
 
   const renderPager = useCallback(
-    total => {
+    (total) => {
       const { page } = qs.parse(location.search);
       const totalPager = [];
       let num = total % 5 ? Math.floor(total / 5) + 1 : Math.floor(total / 5);
@@ -188,6 +188,8 @@ const List = props => {
           },
         );
 
+        console.log(data);
+
         if (data.count > 8) {
           if (data.count % 8) {
             const totalCount = Math.floor(data.count / 8) + 1;
@@ -209,18 +211,18 @@ const List = props => {
   const prevPage = () => {
     if (!pageCount) return alert('첫 페이지입니다');
 
-    setPageCount(prev => prev - 1);
+    setPageCount((prev) => prev - 1);
   };
 
   const nextPage = () => {
     if (totalPager.length === pageCount + 1)
       return alert('마지막 페이지입니다');
 
-    setPageCount(prev => prev + 1);
+    setPageCount((prev) => prev + 1);
   };
 
   const changePage = useCallback(
-    count => {
+    (count) => {
       const name = location.pathname.replace('/list/', '');
       history.push(`/list/${name}?page=${count}`);
     },
@@ -228,9 +230,8 @@ const List = props => {
   );
 
   useEffect(() => {
-    renderPager();
     renderList();
-  }, [renderList, renderPager]);
+  }, [renderList]);
 
   useEffect(() => {
     if (pageCount !== undefined) setCurrentPager(totalPager[pageCount]);
@@ -260,7 +261,7 @@ const List = props => {
           <>
             <EventList>
               {ticketLists &&
-                ticketLists.map(ticket => (
+                ticketLists.map((ticket) => (
                   <EventListItem
                     key={uuidv4()}
                     {...ticket}
@@ -272,7 +273,7 @@ const List = props => {
               <PrevButton onClick={prevPage}>이전</PrevButton>
               <PagingList>
                 {currentPager &&
-                  currentPager.map(pager => {
+                  currentPager.map((pager) => {
                     return (
                       <Paging key={uuidv4()}>
                         <Pager
