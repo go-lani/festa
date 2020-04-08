@@ -365,8 +365,6 @@ const checkSignIn = async () => {
 
 ### 2-1. 무료/유료/외부 이벤트 카테고리 분류하여 노출
 
-#### 2-1-1. 컨텐츠(무료/유료/외부 이벤트) 렌더링
-
 /src/pages/Home.jsx
 
 ```jsx
